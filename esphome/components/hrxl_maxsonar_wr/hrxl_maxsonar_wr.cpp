@@ -14,13 +14,12 @@ namespace hrxl_maxsonar_wr {
 static const char *const TAG = "hrxl.maxsonar.wr.sensor";
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
-static int MAX_DATA_LENGTH_BYTES;  // = 6
+static int MAX_DATA_LENGTH_BYTES;
 
 
 void HrxlMaxsonarWrComponent::setup() {
   // parse model and update/set variables
-  switch (this->model)
-  {
+  switch (this->model) {
   case "hrxl_maxsonar_wr":
     MAX_DATA_LENGTH_BYTES = 6
     
