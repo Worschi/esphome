@@ -11,23 +11,31 @@
 namespace esphome {
 namespace hrxl_maxsonar_wr {
 
-static const char *const TAG = "hrxl.maxsonar.wr.sensor";
+static char *const TAG;
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
-static int MAX_DATA_LENGTH_BYTES;
+static int MAX_DATA_LENGTH_BYTES;  // = 6
+static float DIVIDEND; 
 
 
 void HrxlMaxsonarWrComponent::setup() {
   // parse model and update/set variables
   switch (this->model) {
+    
   case "hrxl_maxsonar_wr":
-    MAX_DATA_LENGTH_BYTES = 6
+    TAG = "hrxl.maxsonar.wr.sensor";
+    MAX_DATA_LENGTH_BYTES = 6;
+    DIVIDEND = 1000.0
     
   case "xl_maxsonar_wr": 
-    MAX_DATA_LENGTH_BYTES = 5
+    TAG = "hrxl.maxsonar.wr.sensor";
+    MAX_DATA_LENGTH_BYTES = 5;
+    DIVIDEND = 100.0
 
   default:
+    TAG = "hrxl.maxsonar.wr.sensor";
     MAX_DATA_LENGTH_BYTES = 6;
+    DIVIDEND = 1000.0
   } 
 }
 
@@ -67,7 +75,7 @@ void HrxlMaxsonarWrComponent::check_buffer_() {
     if (this->buffer_.length() == MAX_DATA_LENGTH_BYTES && this->buffer_[0] == 'R' &&
         this->buffer_.back() == static_cast<char>(ASCII_CR)) {
       int millimeters = parse_number<int>(this->buffer_.substr(1, MAX_DATA_LENGTH_BYTES - 2)).value_or(0);
-      float meters = float(millimeters) / 1000.0;
+      float meters = float(millimeters) / DIVIDEND;
       ESP_LOGV(TAG, "Distance from sensor: %d mm, %f m", millimeters, meters);
       this->publish_state(meters);
     } else {
