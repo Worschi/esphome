@@ -20,7 +20,7 @@ static float DIVIDEND;
 
 void HrxlMaxsonarWrComponent::setup() {
   // parse model and update/set variables
-  switch (this->model) {
+  switch (this->model_) {
     
   case "hrxl_maxsonar_wr":
     TAG = "hrxl.maxsonar.wr.sensor";
