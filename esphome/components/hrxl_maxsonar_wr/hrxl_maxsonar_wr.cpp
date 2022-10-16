@@ -14,14 +14,37 @@ namespace hrxl_maxsonar_wr {
 static const char *const TAG = "hrxl.maxsonar.wr.sensor";
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
-static const int MAX_DATA_LENGTH_BYTES = 6;
+static int MAX_DATA_LENGTH_BYTES;  // = 6
+
+
+void HrxlMaxsonarWrComponent::setup() {
+  // parse model and update/set variables
+  switch (this->model)
+  {
+  case "hrxl_maxsonar_wr":
+    MAX_DATA_LENGTH_BYTES = 6
+    
+  case "xl_maxsonar_wr": 
+    MAX_DATA_LENGTH_BYTES = 5
+
+  default:
+    MAX_DATA_LENGTH_BYTES = 6;
+  } 
+}
+
 
 /**
- * The sensor outputs something like "R1234\r" at a fixed rate of 6 Hz. Where
- * 1234 means a distance of 1,234 m.
+ * The high resolution (hr) models output something like "R1234\r" at a fixed 
+ * rate of 6 Hz. Where 1234 means a distance of 1,234 m.
+ * 
+ * The normal resolution models output something like "R123\r" at a fixed 
+ * rate of 6 Hz to 10 Hz. Where 123 means a distance of 1,23 m. 
  */
 void HrxlMaxsonarWrComponent::loop() {
   uint8_t data;
+
+  this->setup()  // switches between models
+
   while (this->available() > 0) {
     if (this->read_byte(&data)) {
       buffer_ += (char) data;
