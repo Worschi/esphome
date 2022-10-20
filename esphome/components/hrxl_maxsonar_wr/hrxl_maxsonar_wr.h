@@ -23,7 +23,7 @@ class HrxlMaxsonarWrComponent : public sensor::Sensor, public Component, public 
   
   // ========== INTERNAL METHODS ==========
   Model model_{HRXL};
-  void setup() override;
+  // void setup() override;
   void loop() override;
   void dump_config() override;
 
