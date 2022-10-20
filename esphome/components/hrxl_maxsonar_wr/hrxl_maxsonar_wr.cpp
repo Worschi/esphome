@@ -13,9 +13,9 @@ namespace hrxl_maxsonar_wr {
 
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
-static int MAX_DATA_LENGTH_BYTES = 6;  // = 6
-static float ACCURACY = 0.001; 
-static const char* TAG = "hrxl.maxsonar.wr.sensor";
+static int MAX_DATA_LENGTH_BYTES;  // = 6
+static float ACCURACY; 
+static const char* TAG;
 
 
 /**
@@ -28,6 +28,8 @@ static const char* TAG = "hrxl.maxsonar.wr.sensor";
 void HrxlMaxsonarWrComponent::loop() {
   uint8_t data;
 
+  this->set_model(this->model_)
+
   while (this->available() > 0) {
     if (this->read_byte(&data)) {
       buffer_ += (char) data;
@@ -36,9 +38,9 @@ void HrxlMaxsonarWrComponent::loop() {
   }
 }
 
-void HrxlMaxsonarWrComponent::setup() {
+/* void HrxlMaxsonarWrComponent::setup() {
   this->set_maxsonar_model(this->model_);
-}
+} */
 
 void HrxlMaxsonarWrComponent::check_buffer_() {
   // The sensor seems to inject a rogue ASCII 255 byte from time to time. Get rid of that.
@@ -77,6 +79,8 @@ void HrxlMaxsonarWrComponent::dump_config() {
 }
 
 void HrxlMaxsonarWrComponent::set_maxsonar_model(Model model) {
+
+  this->model_ = model 
 
   switch (this->model_) {
     

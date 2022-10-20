@@ -19,10 +19,10 @@ class HrxlMaxsonarWrComponent : public sensor::Sensor, public Component, public 
  
  public:  
   void set_maxsonar_model(Model model);
+  void set_model(DHTModel model) { model_ = model; }
   // void set_model(Model model) { this->model_ = model; }
   
   // ========== INTERNAL METHODS ==========
-  void setup() override;
   void loop() override;
   void dump_config() override;
 
