@@ -50,7 +50,8 @@ void HrxlMaxsonarWrComponent::setup() {
 void HrxlMaxsonarWrComponent::loop() {
   uint8_t data;
 
-  this->setup()  // switches between models
+  this->setup();  // switches between models
+  this->set_model();
 
   while (this->available() > 0) {
     if (this->read_byte(&data)) {
