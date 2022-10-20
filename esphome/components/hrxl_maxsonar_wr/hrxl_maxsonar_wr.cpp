@@ -36,6 +36,10 @@ void HrxlMaxsonarWrComponent::loop() {
   }
 }
 
+void HrxlMaxsonarWrComponent::setup() {
+  this->set_maxsonar_model(this->model_)
+}
+
 void HrxlMaxsonarWrComponent::check_buffer_() {
   // The sensor seems to inject a rogue ASCII 255 byte from time to time. Get rid of that.
   if (this->buffer_.back() == static_cast<char>(ASCII_NBSP)) {

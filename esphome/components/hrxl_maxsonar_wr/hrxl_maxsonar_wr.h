@@ -22,15 +22,14 @@ class HrxlMaxsonarWrComponent : public sensor::Sensor, public Component, public 
   // void set_model(Model model) { this->model_ = model; }
   
   // ========== INTERNAL METHODS ==========
-  Model model_{HRXL};
-  // void setup() override;
+  void setup() override;
   void loop() override;
   void dump_config() override;
 
  protected:
   void check_buffer_();
   std::string buffer_;
-
+  Model model_{HRXL};
 };
 
 }  // namespace hrxl_maxsonar_wr
