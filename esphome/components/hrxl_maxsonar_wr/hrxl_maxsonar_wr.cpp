@@ -37,7 +37,7 @@ void HrxlMaxsonarWrComponent::loop() {
 }
 
 void HrxlMaxsonarWrComponent::setup() {
-  this->set_maxsonar_model(this->model_)
+  this->set_maxsonar_model(this->model_);
 }
 
 void HrxlMaxsonarWrComponent::check_buffer_() {
