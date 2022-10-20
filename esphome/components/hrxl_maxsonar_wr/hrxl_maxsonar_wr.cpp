@@ -28,7 +28,7 @@ static const char* TAG;
 void HrxlMaxsonarWrComponent::loop() {
   uint8_t data;
 
-  this->set_model(this->model_)
+  this->set_maxsonar_model(this->model_)
 
   while (this->available() > 0) {
     if (this->read_byte(&data)) {
