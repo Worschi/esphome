@@ -11,33 +11,11 @@
 namespace esphome {
 namespace hrxl_maxsonar_wr {
 
-static char *const TAG;
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
 static int MAX_DATA_LENGTH_BYTES;  // = 6
-static float DIVIDEND; 
-
-
-void HrxlMaxsonarWrComponent::setup() {
-  // parse model and update/set variables
-  switch (this->model_) {
-    
-  case "hrxl_maxsonar_wr":
-    TAG = "hrxl.maxsonar.wr.sensor";
-    MAX_DATA_LENGTH_BYTES = 6;
-    DIVIDEND = 1000.0
-    
-  case "xl_maxsonar_wr": 
-    TAG = "hrxl.maxsonar.wr.sensor";
-    MAX_DATA_LENGTH_BYTES = 5;
-    DIVIDEND = 100.0
-
-  default:
-    TAG = "hrxl.maxsonar.wr.sensor";
-    MAX_DATA_LENGTH_BYTES = 6;
-    DIVIDEND = 1000.0
-  } 
-}
+static float ACCURACY; 
+static const char* TAG;
 
 
 /**
@@ -49,9 +27,6 @@ void HrxlMaxsonarWrComponent::setup() {
  */
 void HrxlMaxsonarWrComponent::loop() {
   uint8_t data;
-
-  this->setup();  // switches between models
-  this->set_model();
 
   while (this->available() > 0) {
     if (this->read_byte(&data)) {
@@ -75,9 +50,13 @@ void HrxlMaxsonarWrComponent::check_buffer_() {
 
     if (this->buffer_.length() == MAX_DATA_LENGTH_BYTES && this->buffer_[0] == 'R' &&
         this->buffer_.back() == static_cast<char>(ASCII_CR)) {
-      int millimeters = parse_number<int>(this->buffer_.substr(1, MAX_DATA_LENGTH_BYTES - 2)).value_or(0);
-      float meters = float(millimeters) / DIVIDEND;
-      ESP_LOGV(TAG, "Distance from sensor: %d mm, %f m", millimeters, meters);
+      int result = parse_number<int>(this->buffer_.substr(1, MAX_DATA_LENGTH_BYTES - 2)).value_or(0);
+      float meters = float(result) * ACCURACY;
+      if (this->model_ == XL) {
+        ESP_LOGV(TAG, "Distance from sensor: %d cm, %f m", result, meters);
+      } else {
+        ESP_LOGV(TAG, "Distance from sensor: %d mm, %f m", result, meters);
+      }
       this->publish_state(meters);
     } else {
       ESP_LOGW(TAG, "Invalid data read from sensor: %s", this->buffer_.c_str());
@@ -91,6 +70,22 @@ void HrxlMaxsonarWrComponent::dump_config() {
   LOG_SENSOR("  ", "Distance", this);
   // As specified in the sensor's data sheet
   this->check_uart_settings(9600, 1, esphome::uart::UART_CONFIG_PARITY_NONE, 8);
+}
+
+void HrxlMaxsonarWrComponent::set_maxsonar_model(Model model) {
+
+  switch (this->model_) {
+    
+  case XL: 
+    TAG = "xl.maxsonar.wr.sensor";
+    MAX_DATA_LENGTH_BYTES = 5;
+    ACCURACY = 0.01;
+
+  default:
+    TAG = "hrxl.maxsonar.wr.sensor";
+    MAX_DATA_LENGTH_BYTES = 6;
+    ACCURACY = 0.001;
+  } 
 }
 
 }  // namespace hrxl_maxsonar_wr

@@ -30,13 +30,13 @@ CONFIG_SCHEMA = sensor.sensor_schema(
 ).extend(uart.UART_DEVICE_SCHEMA)
 
 model_option = cv.Schema(
-            cv.Optional(CONF_MODEL, default="HRXL"): 
-            cv.enum(MODELS, upper=True)
+    {cv.Optional(CONF_MODEL, default="HRXL"): cv.enum(MODELS, upper=True)}
 )
-CONFIG_SCHEMA.extend(model_option)
+CONFIG_SCHEMA = CONFIG_SCHEMA.extend(model_option)
 
 
 async def to_code(config):
     var = await sensor.new_sensor(config)
     await cg.register_component(var, config)
     await uart.register_uart_device(var, config)
+    cg.add(var.set_maxsonar_model(config[CONF_MODEL]))

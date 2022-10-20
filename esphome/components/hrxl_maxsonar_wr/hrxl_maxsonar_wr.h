@@ -14,20 +14,23 @@ namespace hrxl_maxsonar_wr {
    XL = 1,    // cm resolution models
  };
 
-class HrxlMaxsonarWrComponent : public sensor::Sensor, public Component, public uart::UARTDevice {
- public:
-  // Nothing really public.
 
+class HrxlMaxsonarWrComponent : public sensor::Sensor, public Component, public uart::UARTDevice {
+ 
+ public:  
+  void set_maxsonar_model(Model model);
+  void set_model(Model model) { this->model_ = model; }
+  
   // ========== INTERNAL METHODS ==========
+  Model model_{HRXL};
   void setup() override;
-  void set_model(Model model) { this->model_ = model; };
   void loop() override;
   void dump_config() override;
 
  protected:
   void check_buffer_();
   std::string buffer_;
-  Model model_{HRXL};
+
 };
 
 }  // namespace hrxl_maxsonar_wr
