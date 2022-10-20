@@ -13,9 +13,9 @@ namespace hrxl_maxsonar_wr {
 
 static const uint8_t ASCII_CR = 0x0D;
 static const uint8_t ASCII_NBSP = 0xFF;
-static int MAX_DATA_LENGTH_BYTES;  // = 6
-static float ACCURACY; 
-static const char* TAG;
+static int MAX_DATA_LENGTH_BYTES = 6;  // = 6
+static float ACCURACY = 0.001; 
+static const char* TAG = "hrxl.maxsonar.wr.sensor";
 
 
 /**
